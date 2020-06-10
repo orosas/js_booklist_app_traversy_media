@@ -29,6 +29,7 @@ class UI {
     }
 
     static addBookToList(book){
+        // Nota: Selecciona el <tbody id="book-list">
         const list = document.querySelector('#book-list');
 
         const row = document.createElement('tr');
@@ -57,10 +58,20 @@ document.addEventListener('DOMContenLoaded', UI.displayBooks());
 // Nota: Selecciona form, le agrega un addEventListener on submite
     // y añade arrow function
 document.querySelector('#book-form').addEventListener('submit', (e) => {
+            
+            e.preventDefault();
             // Get form values
             const title = document.querySelector("#title").value;
             const author = document.querySelector("#author").value;
             const isbn = document.querySelector("#isbn").value;
+
+            // Instantiate book
+            const book = new Book(title, author, isbn);
+
+            console.log(book);
+            // Add book to UI
+            UI.addBookToList(book);
+
         });
 
 
