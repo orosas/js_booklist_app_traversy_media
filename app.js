@@ -12,12 +12,12 @@ class UI {
     static displayBooks() {
         const StoredBooks = [
             {
-                title: 'Libro Uno',
-                author: 'Juan Pérez',
+                title: 'Book One',
+                author: 'John Doe',
                 isbn: '1234567'
             },
             {
-                title: 'Libro Dos',
+                title: 'Book two',
                 author: 'Jane Doe',
                 isbn: '7654321'
             }
@@ -42,6 +42,15 @@ class UI {
                 x</a></td>
         `;
         list.appendChild(row);
+    }
+
+    // Nota: Elimina el contenido de <form> después de hacer submit
+    static clearFields(){
+        // document.querySelector('title').value = '';
+        // document.querySelector('author').value = '';
+        // document.querySelector('isbn').value = '';
+        document.querySelector('#book-form').reset();
+
     }
 }
 
@@ -68,10 +77,13 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
             // Instantiate book
             const book = new Book(title, author, isbn);
 
-            console.log(book);
             // Add book to UI
             UI.addBookToList(book);
 
+            // Clear <form> fields
+            // Nota: Elimina el contenido de <form> después
+            // de hacer submit
+            UI.clearFields();
         });
 
 
