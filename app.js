@@ -44,28 +44,65 @@ class UI {
         list.appendChild(row);
     }
 
+    static deleteBook(el){
+        // Nota: verifica si el e.target contiene un elemento 
+        // con la class="delete". En éste caso debe ser el botón
+        if(el.classList.contains('delete')){
+            // Nota: Se utiliza 2 veces parentElement para seleccionar
+            //     el <tr> a eliminar, ya que el botón se encuentra 
+            // anidado en tr/td/a:
+            //     <tr><td><a href="" class="delete">x</a></td></tr>
+            el.parentElement.parentElement.remove()
+        }
+    }
+
+    // **********************************
+    // Continuar en minuto 36:20
+
+    Video: JS Booklist App No Frameworks
+    https://youtu.be/JaMCxVWtW58
+
+    // ************************************
+    // **********************************
+
+
+    // Nota: Recibe 2 parámetros. El texto del mensaje y
+    // la class de Bootstrap para background color del div
+    // Se crea div desde cero
+    static showFormAlert(message, bgColor) {
+        const div = document.createElement('div');
+        div.className = `alert alert-${bgColor}`;
+        div.appendChild(document.createTextNode(message));
+        const container = document.querySelector('.container');
+        const form = document.querySelector('#book-form');
+        // Nota: Se inserta <div> antes de <form>
+        container.insertBefore(div, form);
+    }
+
     // Nota: Elimina el contenido de <form> después de hacer submit
     static clearFields(){
         // document.querySelector('title').value = '';
         // document.querySelector('author').value = '';
         // document.querySelector('isbn').value = '';
         document.querySelector('#book-form').reset();
-
     }
+ 
 }
 
 
 // Store Class: Handles Storage
 
 
-
+//
 // Event: Display Books
 document.addEventListener('DOMContenLoaded', UI.displayBooks());
 
-
+//
 // Event: Add a Book
-// Nota: Selecciona form, le agrega un addEventListener on submite
+// Nota: Selecciona form, le agrega un addEventListener on submit
     // y añade arrow function
+    // Se llama a: UI.addBookToList
+    // Se limpia <form> después de hacer submit
 document.querySelector('#book-form').addEventListener('submit', (e) => {
             
             e.preventDefault();
@@ -74,8 +111,14 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
             const author = document.querySelector("#author").value;
             const isbn = document.querySelector("#isbn").value;
 
-            // Instantiate book
-            const book = new Book(title, author, isbn);
+            // Validate data
+            // Nota: Valida que no sean campos vacíos
+            if(title ==='' || author === '' || isbn === ''){
+                alert('Please fill in all fields');
+            } else {
+                // Instantiate book
+                const book = new Book(title, author, isbn);
+            }
 
             // Add book to UI
             UI.addBookToList(book);
@@ -87,5 +130,14 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
         });
 
 
+//        
 // Event: Remove a Book.
+//
 
+// Nota: Se usará la técnica de event propagation, al
+// seleccionar <tbody id="book-list">
+document.querySelector('#book-list').addEventListener('click', (e) => {
+    // Nota: e.target regresa el elemento sobre el que se realizó click
+    UI.deleteBook(e.target);
+    
+});
