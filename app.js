@@ -47,6 +47,7 @@ class UI {
     static deleteBook(el){
         // Nota: verifica si el e.target contiene un elemento 
         // con la class="delete". En éste caso debe ser el botón
+        // console.log(el);
         if(el.classList.contains('delete')){
             // Nota: Se utiliza 2 veces parentElement para seleccionar
             //     el <tr> a eliminar, ya que el botón se encuentra 
@@ -56,17 +57,7 @@ class UI {
         }
     }
 
-    // **********************************
-    // Continuar en minuto 36:20
-
-    Video: JS Booklist App No Frameworks
-    https://youtu.be/JaMCxVWtW58
-
-    // ************************************
-    // **********************************
-
-
-    // Nota: Recibe 2 parámetros. El texto del mensaje y
+     // Nota: Recibe 2 parámetros. El texto del mensaje y
     // la class de Bootstrap para background color del div
     // Se crea div desde cero
     static showFormAlert(message, bgColor) {
@@ -77,6 +68,8 @@ class UI {
         const form = document.querySelector('#book-form');
         // Nota: Se inserta <div> antes de <form>
         container.insertBefore(div, form);
+        // Nota: Se elimina div después de 3 segundos
+        setTimeout(() => div.remove(), 3500);
     }
 
     // Nota: Elimina el contenido de <form> después de hacer submit
@@ -90,6 +83,7 @@ class UI {
 }
 
 
+
 // Store Class: Handles Storage
 
 
@@ -100,7 +94,7 @@ document.addEventListener('DOMContenLoaded', UI.displayBooks());
 //
 // Event: Add a Book
 // Nota: Selecciona form, le agrega un addEventListener on submit
-    // y añade arrow function
+    // Añade arrow function para submit.
     // Se llama a: UI.addBookToList
     // Se limpia <form> después de hacer submit
 document.querySelector('#book-form').addEventListener('submit', (e) => {
@@ -114,19 +108,21 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
             // Validate data
             // Nota: Valida que no sean campos vacíos
             if(title ==='' || author === '' || isbn === ''){
-                alert('Please fill in all fields');
+                UI.showFormAlert('Pleas fill in all fields', 'danger');
             } else {
                 // Instantiate book
                 const book = new Book(title, author, isbn);
+                // Add book to UI
+                UI.addBookToList(book);
+
+                // Show success message
+                UI.showFormAlert(`Libro: ${book.title}, Agregado`, 'success');
+
+                // Clear <form> fields
+                // Nota: Elimina el contenido de <form> después
+                // de hacer submit
+                UI.clearFields();
             }
-
-            // Add book to UI
-            UI.addBookToList(book);
-
-            // Clear <form> fields
-            // Nota: Elimina el contenido de <form> después
-            // de hacer submit
-            UI.clearFields();
         });
 
 
@@ -139,5 +135,5 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 document.querySelector('#book-list').addEventListener('click', (e) => {
     // Nota: e.target regresa el elemento sobre el que se realizó click
     UI.deleteBook(e.target);
-    
+    UI.showFormAlert('Libro Eliminado', 'warning');
 });
