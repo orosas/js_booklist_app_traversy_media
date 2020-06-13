@@ -79,12 +79,45 @@ class UI {
         // document.querySelector('isbn').value = '';
         document.querySelector('#book-form').reset();
     }
- 
 }
 
 
 
 // Store Class: Handles Storage
+class Store {
+    static getBooks() {
+        let books;
+        if(localStorage.getItem('books' === null)) {
+            books = []
+        } else {
+            // Nota: JSON.parse convierte a Array
+            books = JSON.parse(localStorage.getItem('books'));
+        }
+
+        return books;
+    }
+
+    static addBook(book) {
+        const books = Store.getBooks();
+
+        books.push(book);
+        // Nota: JSON.stringify convierto a JSON, el Array
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+
+    // Nota: Se elimina libro por ISBN, el cual debe ser único
+    static removeBook(isbn) {
+        const books = Store.getBooks();
+
+        books.forEach((book, index) => {
+            if(book.isbn === isbn) {
+                books.splice(index, 1)
+            }
+        });
+
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+}
 
 
 //
