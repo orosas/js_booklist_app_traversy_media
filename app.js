@@ -10,22 +10,11 @@ class Book {
 // UI Class: Handle UI Tasks
 class UI {
     static displayBooks() {
-        const StoredBooks = [
-            {
-                title: 'Book One',
-                author: 'John Doe',
-                isbn: '1234567'
-            },
-            {
-                title: 'Book two',
-                author: 'Jane Doe',
-                isbn: '7654321'
-            }
-        ];
 
-        const books = StoredBooks;
+        const books = Store.getBooks();
 
         books.forEach((book) => UI.addBookToList(book));
+
     }
 
     static addBookToList(book){
@@ -87,13 +76,12 @@ class UI {
 class Store {
     static getBooks() {
         let books;
-        if(localStorage.getItem('books' === null)) {
-            books = []
+        if(localStorage.getItem('books') === null) {
+            books = [];
         } else {
             // Nota: JSON.parse convierte a Array
             books = JSON.parse(localStorage.getItem('books'));
         }
-
         return books;
     }
 
@@ -111,7 +99,7 @@ class Store {
 
         books.forEach((book, index) => {
             if(book.isbn === isbn) {
-                books.splice(index, 1)
+                books.splice(index, 1);
             }
         });
 
@@ -122,10 +110,10 @@ class Store {
 
 //
 // Event: Display Books
-document.addEventListener('DOMContenLoaded', UI.displayBooks());
+document.addEventListener('DOMContentLoaded', UI.displayBooks);
 
 //
-// Event: Add a Book
+// Event: Add a Book from form
 // Nota: Selecciona form, le agrega un addEventListener on submit
     // Añade arrow function para submit.
     // Se llama a: UI.addBookToList
@@ -137,6 +125,9 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
             const title = document.querySelector("#title").value;
             const author = document.querySelector("#author").value;
             const isbn = document.querySelector("#isbn").value;
+            console.log(title);
+            console.log(author);
+            console.log(isbn);
 
             // Validate data
             // Nota: Valida que no sean campos vacíos
@@ -147,6 +138,9 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
                 const book = new Book(title, author, isbn);
                 // Add book to UI
                 UI.addBookToList(book);
+
+                // Add book to Storage
+                Store.addBook(book);
 
                 // Show success message
                 UI.showFormAlert(`Libro: ${book.title}, Agregado`, 'success');
@@ -166,7 +160,13 @@ document.querySelector('#book-form').addEventListener('submit', (e) => {
 // Nota: Se usará la técnica de event propagation, al
 // seleccionar <tbody id="book-list">
 document.querySelector('#book-list').addEventListener('click', (e) => {
+    
+    // Remove book from UI
     // Nota: e.target regresa el elemento sobre el que se realizó click
     UI.deleteBook(e.target);
-    UI.showFormAlert('Libro Eliminado', 'warning');
+
+    // Remove book from store
+    Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
+
+    UI.showFormAlert('Libro Eliminado de UI y localStorage', 'warning');
 });
