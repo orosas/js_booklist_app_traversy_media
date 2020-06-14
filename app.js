@@ -22,13 +22,17 @@ class UI {
         const list = document.querySelector('#book-list');
 
         const row = document.createElement('tr');
+        row.classList.add('book-row');
+        row.dataset.isbn = book.isbn;
 
         row.innerHTML = `
             <td>${book.title}</td>
             <td>${book.author}</td>
             <td>${book.isbn}</td>
-            <td><a href="#" class="btn btn-danger btn-sm delete">
-                x</a></td>
+            <td><a href="#" class="btn btn-danger btn-sm delete" 
+                    data-isbn="${book.isbn}">x
+                </a>
+            </td>
         `;
         list.appendChild(row);
     }
@@ -42,7 +46,13 @@ class UI {
             //     el <tr> a eliminar, ya que el botón se encuentra 
             // anidado en tr/td/a:
             //     <tr><td><a href="" class="delete">x</a></td></tr>
-            el.parentElement.parentElement.remove()
+            // Nota: Código orginal Traversy Media
+            // el.parentElement.parentElement.remove()
+
+            // Código modificado para no depender de la posición del ISBN
+            const isbn = el.dataset.isbn;
+            console.log(`El isbn a borrar: ${isbn}`);
+            document.querySelector(`.book-row[data-isbn="${isbn}"]`).remove();
         }
     }
 
